@@ -1,12 +1,8 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 library(data.table)
 library(magrittr)
 library(ggplot2)
@@ -18,8 +14,8 @@ activity_data <-
 
 ## What is mean total number of steps taken per day?
 
-```{r}
 
+```r
 daily_number_steps <- 
         activity_data[, sum(steps, na.rm = TRUE), by = date]
 
@@ -41,11 +37,14 @@ abline(v = median_total_steps,
        col = "blue")
 ```
 
-#### The mean total steps taken per day is `r mean_total_steps  %>% round(., 2)`.
-#### The median total steps taken per day is `r median_total_steps`.
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+#### The mean total steps taken per day is 9354.23.
+#### The median total steps taken per day is 10395.
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 ts <- 
         activity_data[, mean(steps, na.rm = TRUE), 
                       by = interval]
@@ -55,15 +54,20 @@ plot(ts$V1 ~ ts$interval,
      xlab = "Interval", 
      ylab = "Average Steps Taken",
      main = "Average Number of Steps by 5-Minute Interval")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 highest_interval <-
         ts[V1 == max(V1)][, interval]
 ```
 
-#### The 5-minute interval with the average highest number of steps is `r highest_interval`.
+#### The 5-minute interval with the average highest number of steps is 835.
 
 ## Imputing missing values
-```{r}
+
+```r
 number_NA <- 
         sum(!complete.cases(activity_data))
 
@@ -113,13 +117,16 @@ abline(v = median(new_daily_number_steps$V1),
        col = "blue")
 ```
 
-#### The number of rows containing NAs is `r number_NA`. 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
-#### Using the strategy on filling in NAs with the mean for the corresponding 5-minute interval, the mean total number of steps is now `r new_mean_total_steps  %>% round(., 2)  %>% format(., scientific = FALSE)` and the median total number of steps is now `r new_median_total_steps  %>% round(., 2)  %>% format(., scientific = FALSE)`. These values are both larger than their corresponding matches from the first part of the assignment. The estimates are much closer to each other and the data less skewed resulting in potentially more accurate estimation of the values.
+#### The number of rows containing NAs is 2304. 
+
+#### Using the strategy on filling in NAs with the mean for the corresponding 5-minute interval, the mean total number of steps is now 10766.19 and the median total number of steps is now 10765. These values are both larger than their corresponding matches from the first part of the assignment. The estimates are much closer to each other and the data less skewed resulting in potentially more accurate estimation of the values.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+
+```r
 new_activity_data[, day := 
                           weekdays(new_activity_data$date  %>% 
                                            as.Date())]
@@ -138,7 +145,8 @@ ggplot(new_activity_data, aes(x = interval, y = steps, colour = day_factor)) +
         facet_wrap(~ day_factor, 
                    nrow = 2) +
         ggtitle("Average Number of Steps per Interval On Weekdays and Weekends")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 #### The plot above shows the average number of steps per interval on weekdays and weekends. As expected, there appears to be overall less activity on weekends with a later start time.
