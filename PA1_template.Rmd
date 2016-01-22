@@ -152,7 +152,7 @@ abline(v = new_median_total_steps,
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+```{r, fig.width=12}
 
 # calculate the days of the week for each of the dates
 new_activity_data[, day := 
